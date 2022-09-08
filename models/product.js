@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const schema = mongoose.schema({
+const schema = mongoose.Schema({
     productId: { type: String, required: true },
     name: { type: String, required: true },
     price: { type: Number, required: true },
@@ -8,14 +8,17 @@ const schema = mongoose.schema({
     currency: {
         type: String,
         required: true,
-        enum: ['USD', 'INR', 'SGD', 'MYR'],
+        default: "INR",
+        enum: ["USD", "INR", "SGD", "MYR"],
     },
     catalog: { type: String, required: true },
-    createdAt: { type: Date, required: true },
-    updatedAt: { type: Date, required: true }
+    quantity: { type: Number, required: true },
+    createdAt: { type: Date },
+    updatedAt: { type: Date }
 },
     {
-        collection: "products"
+        collection: "products",
+        timestamps: true
     }
 )
 
