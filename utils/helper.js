@@ -1,6 +1,7 @@
+const moment = require('moment');
 
 const generateId = (prefix) => {
-    const uniqueId = `${prefix - Math.ceil(moment().valueOf() * Math.random())}`;
+    const uniqueId = `${prefix}-${Math.ceil(moment().valueOf() * Math.random())}`;
     return uniqueId;
 }
 
