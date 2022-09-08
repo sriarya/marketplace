@@ -1,11 +1,11 @@
 ## Marketplace
 A repository of APIs for an e-commerce marketplace.
 ### Running the server
-To run the server, run:
+To run the server:
 
 ```
-Use command: npm start
-Add shared .env file 
+1.Add shared .env file 
+2.Use command: npm start
 ```
 
 To view the Swagger UI interface of the APIs:
