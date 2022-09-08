@@ -4,7 +4,8 @@ A repository of APIs for an e-commerce marketplace.
 To run the server, run:
 
 ```
-npm start
+Use command: npm start
+Add shared .env file 
 ```
 
 To view the Swagger UI interface of the APIs:
