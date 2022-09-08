@@ -1,18 +1,18 @@
-const moment = require('moment');
 const bcrypt = require('bcrypt');
-var jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+const { isEmpty, isArray } = require('lodash');
 
-const { User } = require('../models/user');
-const { validateRegistrationPayload } = require('../utils/validate');
+const { Users } = require('../models');
+const { validatePayload } = require('../utils/validate');
 const { generateId } = require('../utils/helper');
 const { TOKEN_SECRET } = process.env;
 
-const userRegistrationService = (data) => {
+const userRegistrationService = async (data) => {
     try {
-        const isValidPayload = validateRegistrationPayload(data);
+        const { name = '', type = '', password = '', emailId = '' } = data;
+        const isValidPayload = validatePayload({ name, type, password, emailId });
         if (isValidPayload) {
-            const { firstName = '', lastName = '', type = '', password = '', email = '' } = data;
-            const isAnExistingUser = checkIfUserExists(email);
+            const isAnExistingUser = (type == 'seller') ? await checkIfUserExists([{ emailId }, { name }]) : await checkIfUserExists({ emailId })
 
             if (isAnExistingUser) {
                 return {
@@ -24,17 +24,15 @@ const userRegistrationService = (data) => {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
             const userId = type == 'seller' ? generateId('SLR') : generateId('BYR');
-            let token = jwt.sign({ userId, email }, TOKEN_SECRET, { expiresIn: '24h' });
+            let token = jwt.sign({ userId, emailId }, TOKEN_SECRET, { expiresIn: '24h' });
 
-            await User.create({
+            await Users.create({
                 userId,
-                firstName,
-                lastName,
+                name,
                 type,
                 password: hashedPassword,
-                email,
-                token,
-                createdAt: moment().toDate()
+                emailId,
+                token
             })
 
 
@@ -60,15 +58,22 @@ const userRegistrationService = (data) => {
 }
 
 const userLoginService = async (data) => {
-    const { email, password } = data;
+    const { emailId = '', password = '' } = data;
     try {
-        const user = await User.findOne({ email });
+        if (isEmpty(emailId) || isEmpty(password)) {
+            return {
+                status: 'failure',
+                message: 'Required fields missing!Please enter all the required data.'
+            }
+        }
+
+        const user = await Users.findOne({ emailId });
         if (!isEmpty(user)) {
             const { password: passwordInDb, userId } = user;
-            const isValidPassword = await bcrypt.compare(passwordInDb, password);
+            const isValidPassword = await bcrypt.compare(password, passwordInDb);
             if (isValidPassword) {
-                let token = jwt.sign({ userId, email }, TOKEN_SECRET, { expiresIn: '24h' });
-                await User.updateOne({ userId }, { "$set": { token } })
+                let token = jwt.sign({ userId, emailId }, TOKEN_SECRET, { expiresIn: '24h' });
+                await Users.updateOne({ userId }, { "$set": { token } })
                 return {
                     status: 'success',
                     message: 'User LoggedIn successsfully!',
@@ -83,7 +88,7 @@ const userLoginService = async (data) => {
         } else {
             return {
                 status: 'failure',
-                message: 'Invalid username.Please enter valid credentials.'
+                message: 'There is no account associated with these credentials.Please register.'
             }
         }
     } catch (err) {
@@ -95,9 +100,21 @@ const userLoginService = async (data) => {
     }
 }
 
-const checkIfUserExists = async (email) => {
-    const userData = await User.findOne({ email });
-    return !isEmpty(userData) ? true : false
+const checkIfUserExists = async (filter) => {
+    try {
+        let query = filter;
+        if (isArray(filter)) {
+            query = { "$or": filter }
+        }
+        const userData = await Users.findOne(query).lean() || [];
+        return !isEmpty(userData) ? true : false
+    } catch (err) {
+        console.log('Error while registering the user', JSON.stringify(err));
+        return {
+            status: 'failure',
+            message: 'An error occured during registration.Please try after some time.'
+        }
+    }
 }
 
 module.exports = {
