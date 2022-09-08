@@ -12,6 +12,9 @@ const buyerDocs = {
                     },
                     "400": {
                         "description": "Error while fetching the list of sellers"
+                    },
+                    "401": {
+                        "description": "Access is denied.As only buyer can access the routes related to buyer.Please register with type 'buyer' and use the token to access Buyer APIs"
                     }
                 }
             }
@@ -40,6 +43,9 @@ const buyerDocs = {
                     },
                     "400": {
                         "description": "Error while fetching the catalog"
+                    },
+                    "401": {
+                        "description": "Access is denied.As only buyer can access the routes related to buyer.Please register with type 'buyer' and use the token to access Buyer APIs"
                     }
                 }
             }
@@ -83,6 +89,9 @@ const buyerDocs = {
                     },
                     "400": {
                         "description": "Error while Logging In the user"
+                    },
+                    "401": {
+                        "description": "Access is denied - As only buyer can access the routes related to buyer.Please register with type 'buyer' and use the token to access Buyer APIs"
                     }
                 }
             }

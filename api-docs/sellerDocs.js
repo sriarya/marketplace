@@ -26,6 +26,9 @@ const sellerDocs = {
                     },
                     "400": {
                         "description": "Error while creating Catalog."
+                    },
+                    "401": {
+                        "description": "Access is denied - As only seller can access the routes related to seller.Please register with type 'seller' and use the token to access Seller APIs"
                     }
                 }
             }
@@ -42,6 +45,9 @@ const sellerDocs = {
                     },
                     "400": {
                         "description": "Error while fetching the orders list"
+                    },
+                    "401": {
+                        "description": "Access is denied - As only seller can access the routes related to seller.Please register with type 'seller' and use the token to access Seller APIs"
                     }
                 }
             }

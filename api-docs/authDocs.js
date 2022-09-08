@@ -23,7 +23,7 @@ const authDocs = {
                 },
                 "responses": {
                     "200": {
-                        "description": "User Registered Succesfully!"
+                        "description": "User Registered Succesfully!Input the response token in the 'Authorization headers' to access the rest of buyer & seller APIs"
                     },
                     "400": {
                         "description": "Error while registering the user"
@@ -52,7 +52,7 @@ const authDocs = {
                 },
                 "responses": {
                     "200": {
-                        "description": "User LoggedIn Succesfully!"
+                        "description": "User LoggedIn Succesfully!Input the response token in the 'Authorization headers' to access the rest of buyer & seller APIs"
                     },
                     "400": {
                         "description": "Error while Logging In the user"
