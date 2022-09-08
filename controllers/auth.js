@@ -1,10 +1,9 @@
 const { userRegistrationService, userLoginService } = require('../services/auth')
 
-const handleUserRegistration = (req, res) => {
+const handleUserRegistration = async (req, res) => {
     try {
         const { body } = req;
-        console.log('reached successfully!!');
-        const response = userRegistrationService(body);
+        const response = await userRegistrationService(body);
         if (response.status == 'success') {
             res.status(200).json(response)
         } else {
@@ -18,11 +17,10 @@ const handleUserRegistration = (req, res) => {
     }
 }
 
-const handleUserLogin = (req, res) => {
+const handleUserLogin = async (req, res) => {
     try {
         const { body } = req;
-        console.log('reached successfully!!');
-        const response = userLoginService(body);
+        const response = await userLoginService(body);
         if (response.status == 'success') {
             res.status(200).json(response)
         } else {
